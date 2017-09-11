@@ -23,14 +23,19 @@ casper.then(function () {
     this.thenOpen(newsLink, function () {
         // 输出新闻详情页面的title
         this.echo('新闻页面title：' + this.getTitle());
-
-        // 将当前网页保存为截图
-        this.capture('qq-com-news-detail.png');
     });
 
 });
 
-casper.then(function () {
+casper.waitFor(function check() {
+    return this.evaluate(function () {
+        // 注意，此处仅为示例而已，具体的判断条件请依据自己的实际情况来看
+        return $('#cmtNum').text() > 0;
+    });
+}, function then() {
+    // 将当前网页保存为截图
+    this.capture('qq-com-news-detail-waitfor.png');
+
     // 获取新闻页页面元素的信息
     newsData = this.evaluate(function () {
         var result = {};
@@ -43,6 +48,7 @@ casper.then(function () {
 
         return result;
     });
+
 });
 
 casper.then(function () {
